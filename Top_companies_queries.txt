@@ -1,0 +1,265 @@
+--Dataset: 5000 INC Companies
+--Source: Aurielle Perlmann (data.world)
+
+====================================================================================
+
+-- What is the average revenu eamong companies from the list, grouped by industry?
+
+select 
+industry
+,round(avg(revenue),2) as Average_Revenue_Percantage
+from companies 
+where industry is not null 
+group by 1
+
+Result:
+
+industry                    |Average_Revenue_Percantage|
+----------------------------+--------------------------+
+Advertising & Marketing     |                     18.91|
+Logistics & Transportation  |                     53.49|
+Food & Beverage             |                     39.86|
+Consumer Products & Services|                      24.5|
+Retail                      |                     35.91|
+Health                      |                     45.35|
+Telecommunications          |                     29.18|
+Financial Services          |                      40.0|
+Computer Hardware           |                     31.18|
+Software                    |                     21.57|
+Energy                      |                     44.36|
+Government Services         |                     36.53|
+Real Estate                 |                     34.06|
+Manufacturing               |                      33.3|
+Media                       |                     16.71|
+Construction                |                     36.44|
+IT System Development       |                     21.09|
+Travel & Hospitality        |                     26.74|
+Security                    |                     37.27|
+IT Management               |                     22.58|
+Human Resources             |                     30.31|
+Environmental Services      |                     22.51|
+Insurance                   |                     58.74|
+Business Products & Services|                     26.57|
+Education                   |                     20.84|
+Engineering                 |                     32.95|
+IT Services                 |                     19.13|
+
+==============================================================================================
+
+-- Which 3 industries are most and less represented on the list?
+
+select 
+industry 
+,count(industry)
+from companies 
+group by 1
+order by 2 desc 
+limit 3
+
+select 
+industry 
+,count(industry)
+from companies 
+where name is not null 
+group by 1
+order by 2 asc 
+limit 3
+
+Result:
+
+industry                    |count(industry)|
+----------------------------+---------------+
+Business Products & Services|            492|
+Advertising & Marketing     |            489|
+Software                    |            461|
+
+industry              |count(industry)|
+----------------------+---------------+
+Computer Hardware     |             32|
+Environmental Services|             43|
+IT Services           |             43|
+
+============================================================================================
+
+-- Which 5 industries experienced largest average growth indicator?
+
+select 
+industry
+,growth as percentage_growth
+from companies
+-- group by 1
+order by 2 desc
+limit 5
+
+Result:
+
+industry                    |percentage_growth|
+----------------------------+-----------------+
+Advertising & Marketing     |          36680.0|
+Logistics & Transportation  |          30548.0|
+Food & Beverage             |          23880.0|
+Consumer Products & Services|          21850.0|
+Retail                      |          18166.0|
+
+==========================================================================================
+
+-- Which 10 companies had largest increase and decrease of the number of workers?
+
+select 
+name
+,(workers)-(previous_workers) as nr_of_workers_incline_decline
+from companies 
+where workers is not null 
+order by 2 desc  
+limit 10
+
+select 
+name
+,(workers)-(previous_workers) as nr_of_workers_incline_decline
+from companies 
+where workers is not null 
+order by 2 asc  
+limit 10
+
+Result:
+
+name                   |nr_of_workers_incline_decline|
+-----------------------+-----------------------------+
+Allied Universal       |                       118531|
+Alorica                |                        43000|
+Infiniti HR            |                        37145|
+CircusTrix             |                        13739|
+ScribeAmerica          |                        11641|
+TaskUs                 |                         9198|
+Freddy's Frozen Custard|                         6494|
+Pathway Vet Alliance   |                         4174|
+Four Foods Group       |                         3500|
+Pacific Dental Services|                         3356|
+
+name                                 |nr_of_workers_incline_decline|
+-------------------------------------+-----------------------------+
+IDS International Government Services|                         -682|
+Prime Therapeutics                   |                         -600|
+Akorbi                               |                         -300|
+First American Payment Systems       |                         -243|
+Integrity Services                   |                         -150|
+Centrify                             |                         -127|
+Zefr                                 |                          -86|
+Ctems                                |                          -80|
+Atlas Oil Company                    |                          -73|
+NCWC                                 |                          -71|
+
+==========================================================================================
+
+-- Were there any companies that increased revenue and decreased number of workers simultaneously?
+
+select * from companies 
+
+select 
+name 
+,growth
+,(workers)-(previous_workers) as nr_of_workers_incline_decline
+from companies 
+having 
+nr_of_workers_incline_decline < 0
+
+Result:
+
+name                                 |growth|nr_of_workers_incline_decline|
+-------------------------------------+------+-----------------------------+
+Tier4 Group                          |1729.0|                           -3|
+AdFicient                            |1265.0|                           -1|
+Powerful Professionals               | 935.0|                           -8|
+Quantico Tactical                    | 831.0|                          -43|
+Peaxy                                | 817.0|                          -26|
+Driftless Glen Distillery            | 685.0|                          -10|
+Prime Therapeutics                   | 391.0|                         -600|
+360 Risk Partners Insurance Solutions| 365.0|                           -4|
+WealthForge                          | 359.0|                          -15|
+Catalyst Outdoor                     | 358.0|                           -5|
+JDA Worldwide                        | 339.0|                           -6|
+ViewSport International              | 262.0|                           -1|
+Taulia                               | 257.0|                          -22|
+IT Authorities                       | 246.0|                          -10|
+Zentra                               | 235.0|                           -6|
+Tresata                              | 235.0|                           -3|
+Worth Clark Realty                   | 234.0|                           -2|
+Halo Maritime Defense Systems        | 228.0|                           -1|
+Perfect Snacks                       | 223.0|                          -16|
+Synapse Business Systems             | 204.0|                           -4|
+CloudSmartz                          | 199.0|                           -1|
+Benton Roofing                       | 196.0|                           -1|
+Buffalo Computer Graphics            | 188.0|                          -11|
+Squaremouth                          | 175.0|                           -1|
+HydroFloTech                         | 148.0|                          -10|
+NCWC                                 | 142.0|                          -71|
+Touchstone Merchandise Group         | 138.0|                           -3|
+Buzz Franchise Brands                | 127.0|                          -28|
+Alpha Premier                        | 126.0|                           -1|
+Systems Integration                  | 115.0|                           -6|
+Rabbit Air                           | 115.0|                           -1|
+Vennli                               | 110.0|                           -9|
+Dash2 Group                          | 106.0|                           -6|
+RJR Partners                         | 105.0|                           -2|
+Fora Financial                       | 105.0|                          -20|
+Metronome                            |  99.0|                           -8|
+49er Communications                  |  99.0|                           -2|
+Momentum Factor                      |  99.0|                           -9|
+Enhanced Veterans Solutions          |  98.0|                           -8|
+Coranet                              |  98.0|                           -7|
+5                                    |  97.0|                           -3|
+FNB Merchants                        |  97.0|                           -4|
+Zefr                                 |  97.0|                          -86|
+CMBA Architects                      |  95.0|                           -1|
+Cerebra Consulting                   |  91.0|                           -6|
+Monitors.com                         |  89.0|                           -6|
+Selling Simplified                   |  89.0|                          -62|
+Cuddle Clones                        |  88.0|                           -1|
+Kung Fu Tea                          |  87.0|                          -39|
+Adapture                             |  82.0|                           -2|
+GSI Health                           |  82.0|                           -5|
+Davenport Theatrical Enterprises     |  81.0|                           -2|
+AEC Group                            |  80.0|                           -4|
+First American Payment Systems       |  77.0|                         -243|
+Pacific Western Painting             |  77.0|                           -2|
+Creditsafe USA                       |  77.0|                          -11|
+Blueberry Builders                   |  77.0|                           -8|
+Centrify                             |  76.0|                         -127|
+Accelerated Claims                   |  76.0|                          -30|
+CommerceIQ                           |  76.0|                          -22|
+TapClassifieds Auto                  |  75.0|                           -5|
+SBS CyberSecurity                    |  73.0|                           -1|
+GMF Steel Group                      |  72.0|                           -4|
+Integrity Services                   |  72.0|                         -150|
+Consolidus                           |  72.0|                           -1|
+JazzHR                               |  72.0|                           -8|
+Alliance Resource Group              |  71.0|                           -5|
+Republic Bank of Chicago             |  69.0|                           -4|
+Faye Business Systems Group          |  68.0|                           -2|
+Akorbi                               |  68.0|                         -300|
+Momentum Telecom                     |  67.0|                          -11|
+Hasko Trading                        |  67.0|                          -24|
+The Eye Doctors                      |  66.0|                           -2|
+Poetic Systems                       |  65.0|                           -8|
+Right Height Manufacturing           |  65.0|                           -3|
+Myriad360                            |  65.0|                           -3|
+IDS International Government Services|  64.0|                         -682|
+Netsertive                           |  64.0|                          -54|
+Atlantic Blowers                     |  64.0|                           -1|
+Ctems                                |  64.0|                          -80|
+TargetX.com                          |  63.0|                           -8|
+Secure Medical                       |  62.0|                           -7|
+Klemchuk                             |  62.0|                           -1|
+RebelMouse                           |  61.0|                          -54|
+Rapid Response Marketing             |  61.0|                           -1|
+Leigh Marcus | @properties           |  60.0|                           -3|
+Orthopedic Motion                    |  59.0|                           -3|
+GXA Network Solutions                |  58.0|                           -1|
+Gantom Lighting                      |  57.0|                           -2|
+OpenArc                              |  57.0|                           -5|
+Green Mountain Technology            |  54.0|                          -48|
+Atlas Oil Company                    |  53.0|                          -73|
+Smart Energy Today                   |  53.0|                          -27|
+Distillery                           |  53.0|                           -2|
+
+
